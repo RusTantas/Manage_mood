@@ -28,18 +28,18 @@ Day Tracker - это персональный инструмент для ана
 
 ### 1. Клонирование и настройка
 
+### ✅ Готово к запуску
+
+Проект полностью настроен и готов к использованию! Все зависимости установлены, включая ML библиотеки.
+
+**Быстрый запуск:**
 ```bash
-# Клонируйте репозиторий
-git clone <repository-url>
-cd day-tracker
+# Запустите скрипт для автоматического запуска
+./start_project.bat
 
-# Установите зависимости для бэкенда
-cd backend
-pip install fastapi uvicorn sqlalchemy pydantic requests
-
-# Установите зависимости для фронтенда
-cd ../frontend
-npm install
+# Или запустите вручную:
+# Бэкенд: cd backend && python -m uvicorn main:app --reload --port 8000
+# Фронтенд: cd frontend && npm run dev
 ```
 
 ### 2. Запуск бэкенда
