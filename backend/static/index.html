@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система оценки дня</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .top-features {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #bbdefb;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-name {
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .feature-correlation {
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: #4facfe;
+            color: #4facfe;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Система оценки дня</h1>
+            <p>Веб-интерфейс для управления данными и анализа</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('auth')">🔐 Аутентификация</div>
+                <div class="tab" onclick="showTab('data')">📊 Данные</div>
+                <div class="tab" onclick="showTab('fields')">⚙️ Поля</div>
+                <div class="tab" onclick="showTab('stats')">📈 Статистика</div>
+            </div>
+
+            <!-- Аутентификация -->
+            <div id="auth" class="tab-content active">
+                <div class="section">
+                    <h2>🔐 Аутентификация</h2>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>📝 Регистрация</h3>
+                            <form id="registerForm">
+                                <div class="form-group">
+                                    <label>Имя пользователя:</label>
+                                    <input type="text" id="regUsername" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Пароль:</label>
+                                    <input type="password" id="regPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" id="regEmail">
+                                </div>
+                                <button type="submit" class="btn">Зарегистрироваться</button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h3>🔑 Вход</h3>
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label>Имя пользователя:</label>
+                                    <input type="text" id="loginUsername" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Пароль:</label>
+                                    <input type="password" id="loginPassword" required>
+                                </div>
+                                <button type="submit" class="btn">Войти</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Данные -->
+            <div id="data" class="tab-content">
+                <div class="section">
+                    <h2>📊 Управление данными</h2>
+                    <div id="dataForm" class="hidden">
+                        <form id="addRecordForm">
+                            <div class="grid">
+                                <div class="form-group">
+                                    <label>Количество сна (часы):</label>
+                                    <input type="number" id="kol_sna" min="4" max="12" step="0.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Качество сна после 00:00:</label>
+                                    <input type="number" id="kolichestvo_sna_0" min="0" max="10" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Наличие зарядки:</label>
+                                    <select id="nalichee_zarydki" required>
+                                        <option value="1">Да</option>
+                                        <option value="0">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Калорийный завтрак:</label>
+                                    <select id="zavrrak_koloriy" required>
+                                        <option value="1">Да</option>
+                                        <option value="0">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Калорийный обед:</label>
+                                    <select id="obed_koloriy" required>
+                                        <option value="1">Да</option>
+                                        <option value="0">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Чтение:</label>
+                                    <select id="chteniy" required>
+                                        <option value="1">Да</option>
+                                        <option value="0">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Составление распорядка:</label>
+                                    <select id="sostavlenye_rasporydka" required>
+                                        <option value="1">Да</option>
+                                        <option value="0">Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Оценка дня:</label>
+                                    <input type="number" id="ocenka_dny" min="1" max="10" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn">Добавить запись</button>
+                        </form>
+                    </div>
+                    <div id="loginRequired" class="alert alert-error">
+                        Для работы с данными необходимо войти в систему
+                    </div>
+                </div>
+            </div>
+
+            <!-- Поля -->
+            <div id="fields" class="tab-content">
+                <div class="section">
+                    <h2>⚙️ Управление полями</h2>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>➕ Добавить новое поле</h3>
+                            <form id="addFieldForm">
+                                <div class="form-group">
+                                    <label>Название поля (латиница):</label>
+                                    <input type="text" id="fieldName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Отображаемое название:</label>
+                                    <input type="text" id="fieldDisplayName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Тип поля:</label>
+                                    <select id="fieldType" required>
+                                        <option value="number">Число</option>
+                                        <option value="integer">Целое число</option>
+                                        <option value="boolean">Да/Нет</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Минимальное значение:</label>
+                                    <input type="number" id="fieldMinValue">
+                                </div>
+                                <div class="form-group">
+                                    <label>Максимальное значение:</label>
+                                    <input type="number" id="fieldMaxValue">
+                                </div>
+                                <div class="form-group">
+                                    <label>Описание:</label>
+                                    <input type="text" id="fieldDescription">
+                                </div>
+                                <button type="submit" class="btn">Добавить поле</button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h3>📋 Текущие поля</h3>
+                            <div id="fieldsList">
+                                <!-- Поля будут загружены динамически -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div id="stats" class="tab-content">
+                <div class="section">
+                    <h2>📈 Статистика</h2>
+                    <div id="statsContent">
+                        <div class="alert alert-error">
+                            Для просмотра статистики необходимо войти в систему
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentPassword = null;
+
+        // Показать/скрыть вкладки
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Показать выбранную вкладку
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Базовые функции для работы с API
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (currentUser && currentPassword) {
+                const credentials = btoa(`${currentUser}:${currentPassword}`);
+                options.headers['Authorization'] = `Basic ${credentials}`;
+            }
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(`http://localhost:4000${endpoint}`, options);
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.detail || 'Ошибка запроса');
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Регистрация
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const data = {
+                    username: document.getElementById('regUsername').value,
+                    password: document.getElementById('regPassword').value,
+                    email: document.getElementById('regEmail').value
+                };
+
+                const result = await apiCall('/register', 'POST', data);
+                alert('Пользователь успешно зарегистрирован!');
+                
+                // Очистить форму
+                document.getElementById('registerForm').reset();
+            } catch (error) {
+                alert('Ошибка регистрации: ' + error.message);
+            }
+        });
+
+        // Вход
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const result = await apiCall('/login', 'POST', { username, password });
+                
+                currentUser = username;
+                currentPassword = password;
+                
+                alert('Успешный вход!');
+                
+                // Показать формы для работы с данными
+                document.getElementById('dataForm').classList.remove('hidden');
+                document.getElementById('loginRequired').classList.add('hidden');
+                document.getElementById('statsContent').innerHTML = '<div class="alert alert-success">Загрузка статистики...</div>';
+                
+                // Загрузить данные
+                loadStats();
+                loadFields();
+                
+            } catch (error) {
+                alert('Ошибка входа: ' + error.message);
+            }
+        });
+
+        // Добавление записи
+        document.getElementById('addRecordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const data = {
+                    kol_sna: parseFloat(document.getElementById('kol_sna').value),
+                    kolichestvo_sna_0: parseInt(document.getElementById('kolichestvo_sna_0').value),
+                    nalichee_zarydki: parseInt(document.getElementById('nalichee_zarydki').value),
+                    zavrrak_koloriy: parseInt(document.getElementById('zavrrak_koloriy').value),
+                    obed_koloriy: parseInt(document.getElementById('obed_koloriy').value),
+                    chteniy: parseInt(document.getElementById('chteniy').value),
+                    sostavlenye_rasporydka: parseInt(document.getElementById('sostavlenye_rasporydka').value),
+                    ocenka_dny: parseInt(document.getElementById('ocenka_dny').value)
+                };
+
+                const result = await apiCall('/data', 'POST', data);
+                
+                let message = 'Запись успешно добавлена!\n\n';
+                if (result.top_features && result.top_features.length > 0) {
+                    message += 'Топ-3 фактора, влияющих на оценку дня:\n';
+                    result.top_features.forEach((feature, index) => {
+                        message += `${index + 1}. ${feature.feature}: ${feature.correlation} (${feature.impact})\n`;
+                    });
+                }
+                
+                alert(message);
+                
+                // Обновить статистику
+                loadStats();
+                
+                // Очистить форму
+                document.getElementById('addRecordForm').reset();
+                
+            } catch (error) {
+                alert('Ошибка добавления записи: ' + error.message);
+            }
+        });
+
+        // Добавление поля
+        document.getElementById('addFieldForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const data = {
+                    name: document.getElementById('fieldName').value,
+                    display_name: document.getElementById('fieldDisplayName').value,
+                    field_type: document.getElementById('fieldType').value,
+                    min_value: document.getElementById('fieldMinValue').value ? parseFloat(document.getElementById('fieldMinValue').value) : null,
+                    max_value: document.getElementById('fieldMaxValue').value ? parseFloat(document.getElementById('fieldMaxValue').value) : null,
+                    description: document.getElementById('fieldDescription').value
+                };
+
+                const result = await apiCall('/fields', 'POST', data);
+                alert('Поле успешно добавлено!');
+                
+                // Обновить список полей
+                loadFields();
+                
+                // Очистить форму
+                document.getElementById('addFieldForm').reset();
+                
+            } catch (error) {
+                alert('Ошибка добавления поля: ' + error.message);
+            }
+        });
+
+        // Загрузка статистики
+        async function loadStats() {
+            try {
+                const stats = await apiCall('/stats');
+                
+                if (stats.message) {
+                    document.getElementById('statsContent').innerHTML = 
+                        `<div class="alert alert-error">${stats.message}</div>`;
+                    return;
+                }
+
+                let html = `
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${stats.total_records}</div>
+                            <div class="stat-label">Всего записей</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${stats.average_sleep.toFixed(1)}</div>
+                            <div class="stat-label">Средний сон (ч)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${stats.average_rating.toFixed(1)}</div>
+                            <div class="stat-label">Средняя оценка</div>
+                        </div>
+                    </div>
+                `;
+
+                if (stats.top_features && stats.top_features.length > 0) {
+                    html += `
+                        <div class="top-features">
+                            <h3>🎯 Топ-3 фактора, влияющих на оценку дня:</h3>
+                            ${stats.top_features.map(feature => `
+                                <div class="feature-item">
+                                    <span class="feature-name">${feature.feature}</span>
+                                    <span class="feature-correlation">${feature.correlation} (${feature.impact})</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                document.getElementById('statsContent').innerHTML = html;
+                
+            } catch (error) {
+                document.getElementById('statsContent').innerHTML = 
+                    `<div class="alert alert-error">Ошибка загрузки статистики: ${error.message}</div>`;
+            }
+        }
+
+        // Загрузка полей
+        async function loadFields() {
+            try {
+                const fields = await apiCall('/fields');
+                
+                let html = '';
+                fields.fields.forEach(field => {
+                    html += `
+                        <div class="feature-item">
+                            <span class="feature-name">${field.display_name}</span>
+                            <button class="btn btn-danger" onclick="deleteField('${field.name}')">Удалить</button>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('fieldsList').innerHTML = html;
+                
+            } catch (error) {
+                document.getElementById('fieldsList').innerHTML = 
+                    `<div class="alert alert-error">Ошибка загрузки полей: ${error.message}</div>`;
+            }
+        }
+
+        // Удаление поля
+        async function deleteField(fieldName) {
+            if (!confirm('Вы уверены, что хотите удалить это поле?')) {
+                return;
+            }
+            
+            try {
+                await apiCall(`/fields/${fieldName}`, 'DELETE');
+                alert('Поле успешно удалено!');
+                loadFields();
+            } catch (error) {
+                alert('Ошибка удаления поля: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

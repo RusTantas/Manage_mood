@@ -1,0 +1,20 @@
+{
+  "test_user": {
+    "user_id": "9baf2c8711543bbe",
+    "username": "test_user",
+    "password_hash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+    "email": "test@example.com",
+    "created_at": "2025-08-17T18:38:19.594262",
+    "last_login": "2025-08-17T18:38:19.600442",
+    "data_file": "9baf2c8711543bbe_data.csv"
+  },
+  "Руслан": {
+    "user_id": "bc2e6c832aafcce6",
+    "username": "Руслан",
+    "password_hash": "ebe9aa0dab2b8c3824f4942e8656e756ddcb8ad53131a0b1803a1c17edf29e8e",
+    "email": "-",
+    "created_at": "2025-08-17T18:40:38.960443",
+    "last_login": "2025-08-17T18:41:16.224540",
+    "data_file": "bc2e6c832aafcce6_data.csv"
+  }
+}

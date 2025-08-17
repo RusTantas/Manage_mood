@@ -120,3 +120,4 @@ class Recommendation(BaseModel):
     description: str
     confidence: float
     priority: int  # 1-5, where 5 is highest priority
+

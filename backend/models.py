@@ -100,3 +100,4 @@ class MoodTracking(Base):
     # Relationships
     user = relationship("User", back_populates="mood_trackings")
     daily_record = relationship("DailyRecord", back_populates="mood_trackings")
+
